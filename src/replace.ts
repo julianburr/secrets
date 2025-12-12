@@ -2,7 +2,7 @@ import { read } from './read';
 
 import type { ProviderName } from './utils/providers';
 
-const SECRET_PATTERN = /secret:\/\/([^\s]+)/g;
+const SECRET_PATTERN = /(secret|psst):\/\/([^\s]+)/g;
 
 type Args = {
   provider?: ProviderName;

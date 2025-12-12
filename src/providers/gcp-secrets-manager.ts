@@ -17,19 +17,18 @@ const gcpSecretsManagerProvider: Provider = {
         throw new Error('GCP_PROJECT_ID environment variable not set');
       }
 
+      // Allow user to optionally specify a specific version of the secret via `[path]:v[version]`
+      const version = key.match(/:v(\d+)$/)?.[1];
       const secretManagerClient = new SecretManagerServiceClient({ projectId });
-      const [version] = await secretManagerClient.accessSecretVersion({
-        // For now we're always using the latest secret version
-        // We could make this more flexible by allowing specifying a version through a naming pattern
-        //  e.g. `secret://path/to/secret:v{version}`
-        name: `${key}/versions/latest`,
+      const [value] = await secretManagerClient.accessSecretVersion({
+        name: `${key}/versions/${version || 'latest'}`,
       });
 
-      if (!version.payload?.data) {
+      if (!value.payload?.data) {
         throw new Error(`Secret ${key} not found or has no value`);
       }
 
-      return version.payload.data.toString();
+      return value.payload.data.toString();
     } catch (error) {
       throw new Error(`Failed to get secret ${key}: ${(error as Error).message}`);
     }

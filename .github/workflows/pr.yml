@@ -20,7 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: PNPM setup
+        uses: pnpm/action-setup@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -31,3 +36,59 @@ jobs:
         run: |
           pnpm lint
           pnpm typecheck
+
+  ###
+  # Publish release candidate to NPM for easier testing
+  ###
+  publish:
+    name: 🚀 Publish release candidate
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PNPM setup
+        uses: pnpm/action-setup@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Checkout shared actions repo
+        uses: actions/checkout@master
+        with:
+          repository: julianburr/github-actions
+          path: .github/shared
+
+      - name: Install actions dependencies
+        # HACK: temporarily rename the root package.json, to avoid corepack tripping out
+        run: |
+          mv package.json package.json.bak
+          yarn --cwd=./.github/shared install 
+          mv package.json.bak package.json
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Get commit hash
+        id: sha
+        run: echo "value=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Update package version
+        run: jq '.version = "0.0.0-rc.${{ steps.sha.outputs.value }}"' package.json > package.json.tmp && mv package.json.tmp package.json
+
+      - name: Publish package to npm
+        uses: ./.github/shared/npm-publish-package
+
+      - name: Add comment to PR
+        uses: ./.github/shared/github-create-comment
+        with:
+          id: ${{ github.event.number }}
+          pr-number: ${{ github.event.number }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          content: |
+            Release candidate has been published: [v0.0.0-rc.${{ steps.sha.outputs.value }}](https://www.npmjs.com/package/@julianburr/secrets/v/0.0.0-rc.${{ steps.commit-hash.outputs.COMMIT_HASH }})
