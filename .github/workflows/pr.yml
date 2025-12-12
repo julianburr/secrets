@@ -8,6 +8,10 @@ concurrency:
   group: pr-${{ github.event.number }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   NODE_VERSION: 24
 
@@ -62,7 +66,6 @@ jobs:
           path: .github/shared
 
       - name: Install actions dependencies
-        # HACK: temporarily rename the root package.json, to avoid corepack tripping out
         run: |
           mv package.json package.json.bak
           yarn --cwd=./.github/shared install 
