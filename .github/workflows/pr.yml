@@ -94,4 +94,4 @@ jobs:
           pr-number: ${{ github.event.number }}
           github-token: ${{ secrets.GH_TOKEN }}
           content: |
-            Release candidate has been published: [v0.0.0-rc.${{ steps.sha.outputs.value }}](https://www.npmjs.com/package/@julianburr/secrets/v/0.0.0-rc.${{ steps.commit-hash.outputs.COMMIT_HASH }})
+            Release candidate has been published: [v0.0.0-rc.${{ steps.sha.outputs.value }}](https://www.npmjs.com/package/@julianburr/secrets/v/0.0.0-rc.${{ steps.sha.outputs.value }})
