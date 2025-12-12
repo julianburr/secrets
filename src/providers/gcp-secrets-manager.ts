@@ -1,6 +1,6 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
-import type { Provider } from './types';
+import type { Provider } from '../utils/providers';
 
 const gcpSecretsManagerProvider: Provider = {
   get: async ({ key }) => {

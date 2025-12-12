@@ -1,6 +1,6 @@
 import { OnePasswordConnect } from '@1password/connect';
 
-import type { Provider } from './types';
+import type { Provider } from '../utils/providers';
 
 const onePasswordProvider: Provider = {
   get: async ({ key }) => {

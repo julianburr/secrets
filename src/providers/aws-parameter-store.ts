@@ -1,6 +1,6 @@
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 
-import type { Provider } from './types';
+import type { Provider } from '../utils/providers';
 
 const awsParameterStoreProvider: Provider = {
   get: async ({ key }) => {

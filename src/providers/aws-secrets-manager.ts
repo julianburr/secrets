@@ -1,6 +1,6 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 
-import type { Provider } from './types';
+import type { Provider } from '../utils/providers';
 
 const awsSecretsManagerProvider: Provider = {
   get: async ({ key }) => {

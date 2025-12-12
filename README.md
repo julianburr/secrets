@@ -135,9 +135,12 @@ secrets read /my-app/dev/db-password --provider aws-parameter-store
 
 ## Config
 
-This project uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig), so you can use any of the support file naming conventions for your config file (e.g. `.secrets`, `secrets.json`, etc.) or as a `secrets` property in your `package.json`
+This project uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig), so you can use any of the support file naming conventions for your config file (e.g. `.secrets`, `secrets.json`, etc. or as a `secrets` property in your `package.json`). Alternatively you can also use `psst` as your config (e.g. `.psst`, `psst.json`, etc.)
 
-- `provider: 1password | aws-parameter-store | aws-secrets-manager | gcp-secrets-manager`: string name of provider to use for secret value retrieval
+**Available options:**
+
+- `provider`
+  - `"1password" | "aws-parameter-store" | "aws-secrets-manager" | "gcp-secrets-manager"`: string name of provider to use for secret value retrieval
 
 ## Contribute
 
