@@ -2,7 +2,7 @@
 
 This CLI tool helps you pull secrets (e.g., for local .env files) from whatever vault service your team uses. Instead of having to ask for all the env files for local development, new developers only need to get access to that vault provider, and everything works from the get-go.
 
-To do so, the script will replace any environment variables that start with `secret://*` with the actual secret value retrieved from the provider.
+To do so, the script will replace any environment variables that start with `secret://*` or `psst://*` with the actual secret value retrieved from the provider.
 
 ## Installation
 
@@ -39,7 +39,7 @@ secrets read <key> -o output.txt
 ### Injecting Secrets into a File
 
 ```bash
-# Inject secrets into a file based on template
+# Inject secrets into a file based on template, e.g. in CI/CD
 secrets inject -i .env.template -o .env
 ```
 
@@ -47,10 +47,10 @@ secrets inject -i .env.template -o .env
 
 ```bash
 # Run a command with secrets injected into environment
-secrets run -- [your-command]
+secrets run -- <your-command>
 
 # Use a file containing secret references
-secrets run -i .env.special -- [your-command]
+secrets run -i .env.special -- <your-command>
 ```
 
 ### See all commands and options
@@ -69,18 +69,12 @@ Uses AWS Systems Manager Parameter Store to retrieve secrets.
 
 **Environment Variables:**
 
-- AWS credentials should be configured via the standard AWS SDK methods (e.g., `~/.aws/credentials`, environment variables, etc.)
+- `AWS_PROFILE`: AWS credentials should be configured via the standard AWS SDK methods (e.g., `~/.aws/credentials`, environment variables, etc.)
 - `AWS_REGION` - (Optional) The AWS region to use
 
 **Key Format:**
 
 - Parameter name as defined in Parameter Store (e.g., `/my-app/dev/db-password`)
-
-**Example:**
-
-```bash
-secrets read /my-app/dev/db-password --provider aws-parameter-store
-```
 
 ### AWS Secrets Manager
 
