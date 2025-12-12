@@ -1,7 +1,12 @@
 {
   "name": "@julianburr/secrets",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI tool for managing secrets",
+  "repository": {
+    "url": "https://github.com/julianburr/secrets"
+  },
+  "author": "Julian Burr <hello@julianburr.com>",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
