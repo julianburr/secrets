@@ -1,4 +1,4 @@
-import { explorer } from './config';
+import { getConfig } from './config';
 import onePasswordProvider from '../providers/1password';
 import awsParameterStoreProvider from '../providers/aws-parameter-store';
 import awsSecretsManagerProvider from '../providers/aws-secrets-manager';
@@ -17,12 +17,17 @@ export type Provider = {
 
 export type ProviderName = keyof typeof providers;
 
-export const getProvider = async (providerName?: ProviderName) => {
+export async function getProvider(providerName?: ProviderName) {
   if (providerName) {
     return providers[providerName];
   }
 
-  const config = await explorer.search();
-  const key = (config?.config?.provider as ProviderName) || 'aws-parameter-store';
-  return providers[key];
-};
+  const config = await getConfig();
+  const key = config?.provider || 'aws-parameter-store';
+  const provider = providers[key];
+  if (!provider) {
+    throw new Error(`Provider ${key} not found`);
+  }
+
+  return provider;
+}
